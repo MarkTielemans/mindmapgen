@@ -1,0 +1,72 @@
+.mindmap {
+    width: 100%;
+    height: 100%;
+}
+
+.foreignDiv {
+    width: 100%;
+    height: 100%;
+    border: 1px solid #343434;
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+    background: white;
+}
+
+.content {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 0;
+    padding: 0 16px;
+}
+
+.contentText {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    word-wrap: break-word;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-height: 100%;
+    width: 100%;
+    text-align: center;
+    font-size: 0.8em;
+    font-weight: 550;
+}
+
+.controlBar {
+    border-top: 1px solid #ccc;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    display: flex;
+    align-items: center;
+}
+
+.controlButton {
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #666;
+}
+
+.controlButton:hover {
+    color: #333;
+}
+
+.controlBarInput {
+    width: 60px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    text-align: center;
+}
+
+.spacer {
+    flex: 1;
+}

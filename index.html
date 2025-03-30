@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        .foreign-div {
+            width: 100%;
+            height: 100%;
+            border: 1px solid #343434;
+            border-radius: 16px;
+            display: flex;
+            flex-direction: column;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+            background: white;
+        }
+
+        .content {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 0;
+            padding: 0 16px;
+        }
+
+        .content-text {
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 2;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            word-wrap: break-word;
+            max-height: 100%;
+            width: 100%;
+            text-align: center;
+            font-size: 0.8em;
+            font-weight: 550;
+        }
+
+        .control-bar {
+            border-top: 1px solid #ccc;
+            padding-top: 4px;
+            padding-bottom: 4px;
+            display: flex;
+            align-items: center;
+        }
+
+        .control-bar button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+        }
+
+        .control-bar button:hover {
+            color: #333;
+        }
+
+        .control-bar input {
+            width: 60px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            text-align: center;
+        }
+
+        .spacer {
+            flex: 1;
+        }
+
+        #tooltip {
+            font-family: Arial, sans-serif;
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 4px 8px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            border-radius: 4px;
+            font-size: 14px;
+            white-space: nowrap;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s;
+        }
+
+        #tooltip.visible {
+            opacity: 1;
+        }
+    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mindmap</title>
+    <script src="mindmap.lib.js"></script>
+    <script src="data.js"></script>
+    <script>
+        function onPageLoad() {
+            const data = [{ "title": "Subscription Revenue" },
+                { "title": "Professional Services Revenue" },
+                { "title": "Partnership Revenue" },
+                { "title": "Expansion Revenue" },
+            ];
+            const mindmap = new MindmapLayout(data, { nodeX: 200, spaceX: 50, nodeY: 70, spaceY: 100 }, 'My sales quota').generateLayout();
+            const renderer = new MindmapRenderer({});
+            renderer.draw(mindmap.fxNodes, mindmap.dimensions, document.querySelector('svg#mindmap'));
+        }
+    </script>
+</head>
+<body onload="onPageLoad()">
+    <div id="tooltip"></div>
+    <svg id="mindmap"></svg>
+
+    <script>
+        function showTooltip(txt) {
+            const tooltip = document.getElementById('tooltip');
+            tooltip.textContent = txt;
+            tooltip.classList.add('visible');
+        }
+
+        function hideTooltip() {
+            document.getElementById('tooltip').classList.remove('visible');
+        }
+    </script>
+</body>
+</html>
