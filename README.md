@@ -1,6 +1,9 @@
 # mindmapgen
 Simple homebrew 2 tier mindmap generator.
 
+# Javascript
+Not fully functional. Example of Mindmap display: [https://marktielemans.github.io/mindmapgen/].
+
 # React
 The mindmap component can display data in a reactive way and allows for interacting with the input data as well.
 The Mindmap component must be configured with a renderer, such as `JsonView` or `SvgMindmapView`.
