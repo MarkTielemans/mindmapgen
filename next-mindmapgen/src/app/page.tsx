@@ -141,7 +141,7 @@ export default function Home() {
     ]
   };
 
-  const [additionalNodes, setAdditionalNodes] = useState([
+  const [additionalNodes] = useState([
     {
       id: crypto.randomUUID(),
       title: "🌋 Volcanic Realms",
