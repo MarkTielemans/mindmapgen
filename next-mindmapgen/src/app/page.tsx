@@ -5,7 +5,7 @@ import HorizontalLayoutEngine from "@/components/Mindmap/layout/HorizontalLayout
 import RadialLayoutEngine from "@/components/Mindmap/layout/RadialLayoutEngine";
 import JsonView from "@/components/Mindmap/render/JsonView";
 import SvgMindmapView from "@/components/Mindmap/render/SvgMindmapView";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner"
 
 export default function Home() {
@@ -71,7 +71,7 @@ export default function Home() {
   }] as const;
   const renderers = [SvgMindmapView, JsonView] as const;
 
-  const sampleMapData = {
+  const [defaultData, setDefaultData] = useState({
     id: crypto.randomUUID(),
     title: "🌟 Adventure Time!",
     children: [
@@ -139,9 +139,9 @@ export default function Home() {
         ]
       }
     ]
-  };
+  });
 
-  const [additionalNodes] = useState([
+  const [additionalNodes, setAdditionalNodes] = useState([
     {
       id: crypto.randomUUID(),
       title: "🌋 Volcanic Realms",
@@ -259,21 +259,6 @@ export default function Home() {
       text: 'Toggle L2',
       onClick: () => {
         setShowChildren(!showChildren);
-        if (showChildren) {
-          setData(sampleMapData);
-        } else {
-          // Remove all children's children
-          const noChildren = sampleMapData.children.map((child) => {
-            return {
-              ...child,
-              children: []
-            }
-          });
-          setData({
-            ...sampleMapData,
-            children: noChildren
-          });
-        }
       }
     },
     {
@@ -281,8 +266,14 @@ export default function Home() {
       text: 'Add Node',
       onClick: () => {
         if (additionalNodes.length > 0) {
-          const node = additionalNodes.pop()!;
-          setData({ ...data, children: [...data.children, node] });
+          const nodes = [...additionalNodes];
+          const node = nodes.pop()!;
+          
+          setAdditionalNodes(nodes);
+          setDefaultData({
+            ...defaultData,
+            children: [...defaultData.children, node]
+          });
         } else {
           toast.error('Out of nodes!', {
             cancel: {
@@ -298,10 +289,28 @@ export default function Home() {
   const [showChildren, setShowChildren] = useState(false);
   const [renderer, setRenderer] = useState(0);
   const [layout, setLayout] = useState(0);
-  const [data, setData] = useState(sampleMapData);
+  const [data, setData] = useState(defaultData);
 
   const currentLayout = layouts[layout];
   const currentRenderer = renderers[renderer];
+
+  useEffect(() => {
+    if (showChildren) {
+      setData(defaultData);
+    } else {
+      // Remove all children's children
+      const noChildren = defaultData.children.map((child) => {
+        return {
+          ...child,
+          children: []
+        }
+      });
+      setData({
+        ...defaultData,
+        children: noChildren
+      });
+    }
+  }, [showChildren, defaultData]);
 
   return (
     <div className="h-screen w-screen flex flex-col bg-slate-900 bg-gradient-to-br from-slate-900 via-blue-900/40 to-slate-900">
