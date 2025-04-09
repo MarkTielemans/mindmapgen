@@ -1,20 +1,16 @@
 import React from "react";
 import { RenderComponentProps } from "../Mindmap.types";
+import { Textarea } from "@/components/ui/textarea"
 
-export default function JsonView({ data, onDataChange }: RenderComponentProps) {
+export default function JsonView({ data }: RenderComponentProps) {
     return (
-        <>
-            <pre data-testid="json-view">{JSON.stringify(data, null, 2)}</pre>
-            <button
-                onClick={() => {
-                    onDataChange({
-                        ...data,
-                        title: `${data.title} ${data.title}`
-                    });
-                }}
-            >
-                Change Data
-            </button>
-        </>
+        <div className="h-full">
+            <Textarea 
+                data-testid="json-view"
+                className="h-full font-mono resize-none text-white text-xs"
+                readOnly
+                value={JSON.stringify(data, null, 2)}
+            />
+        </div>
     );
 }

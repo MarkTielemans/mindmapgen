@@ -7,6 +7,7 @@ import JsonView from "@/components/Mindmap/render/JsonView";
 import SvgMindmapView from "@/components/Mindmap/render/SvgMindmapView";
 import { useEffect, useState } from "react";
 import { toast } from "sonner"
+import { Textarea } from "@/components/ui/textarea"
 
 export default function Home() {
   const horizontalEngine = new HorizontalLayoutEngine();
@@ -228,6 +229,69 @@ export default function Home() {
     }
   ]);
 
+  const [showChildren, setShowChildren] = useState(false);
+  const [renderer, setRenderer] = useState(0);
+  const [layout, setLayout] = useState(0);
+  const [data, setData] = useState(defaultData);
+  const [codeContent, setCodeContent] = useState("");
+  const [showCode, setShowCode] = useState(false);
+
+  const currentLayout = layouts[layout];
+  const currentRenderer = renderers[renderer];
+
+  useEffect(() => {
+    if (showChildren) {
+      setData(defaultData);
+    } else {
+      // Remove all children's children
+      const noChildren = defaultData.children.map((child) => {
+        return {
+          ...child,
+          children: []
+        }
+      });
+      setData({
+        ...defaultData,
+        children: noChildren
+      });
+    }
+  }, [showChildren, defaultData]);
+
+  useEffect(() => {
+    const config = 
+    {
+      data: "...",
+      LayoutEngine: currentLayout.engine,
+      Renderer: currentRenderer,
+      renderConfig: {
+      fontSize: 12,
+      arrowStyle: currentLayout.arrowStyle, 
+      arrowCurveFactor: currentLayout.arrowCurveFactor, 
+      arrowCurveExclFactor: currentLayout.arrowCurveExclFactor, 
+      arrowGapFactor: currentLayout.arrowGapFactor,
+      showToolbar: false, 
+      svgArrowPathProps: {
+        stroke: currentLayout.stroke,
+        strokeWidth: currentLayout.strokeWidth, 
+        strokeLinecap: currentLayout.strokeLinecap, 
+        strokeLinejoin: currentLayout.strokeLinejoin, 
+        strokeDasharray: currentLayout.strokeDasharray
+      }, 
+      svgCircleProps: {
+        stroke: currentLayout.circleStroke,
+        fill: currentLayout.circleFill,
+        fillOpacity: 1,
+        visibility: currentLayout.circleVisibility
+      },
+      minViewBox: {
+        w: 300,
+          h: 300
+        }
+      }
+    };
+    setCodeContent("<Mindmap " + JSON.stringify(config, null, 2) + " />");
+  }, [currentLayout]);
+
   const buttons = [
     {
       id: 0,
@@ -283,71 +347,63 @@ export default function Home() {
           });
         }
       }
+    },
+    {
+      id: 4,
+      text: 'Toggle Code',
+      onClick: () => {
+        setShowCode(!showCode);
+      }
     }
   ];
-
-  const [showChildren, setShowChildren] = useState(false);
-  const [renderer, setRenderer] = useState(0);
-  const [layout, setLayout] = useState(0);
-  const [data, setData] = useState(defaultData);
-
-  const currentLayout = layouts[layout];
-  const currentRenderer = renderers[renderer];
-
-  useEffect(() => {
-    if (showChildren) {
-      setData(defaultData);
-    } else {
-      // Remove all children's children
-      const noChildren = defaultData.children.map((child) => {
-        return {
-          ...child,
-          children: []
-        }
-      });
-      setData({
-        ...defaultData,
-        children: noChildren
-      });
-    }
-  }, [showChildren, defaultData]);
 
   return (
     <div className="h-screen w-screen flex flex-col bg-slate-900 bg-gradient-to-br from-slate-900 via-blue-900/40 to-slate-900">
       <main className="flex-1 w-full p-4 pb-2 min-h-0">
-        <div className="w-full h-full rounded-lg border border-blue-500/20 bg-slate-800/30 backdrop-blur-sm shadow-[inset_0_1px_1px_rgba(148,163,184,0.1)] overflow-auto">
-          <Mindmap 
-            data={data} 
-            LayoutEngine={currentLayout.engine}
-            Renderer={currentRenderer} 
-            onDataChange={() => {}} 
-            renderConfig={
-              {
-                fontSize: 12,
-                arrowStyle: currentLayout.arrowStyle, 
-                arrowCurveFactor: currentLayout.arrowCurveFactor, 
-                arrowCurveExclFactor: currentLayout.arrowCurveExclFactor, 
-                arrowGapFactor: currentLayout.arrowGapFactor,
-                showToolbar: false, 
-                svgArrowPathProps: {
-                  stroke: currentLayout.stroke,
-                  strokeWidth: currentLayout.strokeWidth, 
-                  strokeLinecap: currentLayout.strokeLinecap, 
-                  strokeLinejoin: currentLayout.strokeLinejoin, 
-                  strokeDasharray: currentLayout.strokeDasharray
-                }, 
-                svgCircleProps: {
-                  stroke: currentLayout.circleStroke,
-                  fill: currentLayout.circleFill,
-                  fillOpacity: 1,
-                  visibility: currentLayout.circleVisibility
-                },
-                minViewBox: {
-                  w: 300,
-                  h: 300
+        <div className="w-full h-full flex flex-col gap-4">
+          {showCode && (
+            <div className="w-full rounded-lg border border-white-500/20 bg-slate-800/30 backdrop-blur-sm shadow-[inset_0_1px_1px_rgba(148,163,184,0.1)]">
+              <Textarea 
+                className="w-full h-64 p-4 bg-transparent text-slate-200 resize-none focus:outline-none font-mono text-xs"
+                value={codeContent}
+                readOnly
+              />
+            </div>
+          )}
+          <div className="flex-1 w-full rounded-lg border border-white-500/20 bg-slate-800/30 backdrop-blur-sm shadow-[inset_0_1px_1px_rgba(148,163,184,0.1)] overflow-auto">
+            <Mindmap 
+              data={data} 
+              LayoutEngine={currentLayout.engine}
+              Renderer={currentRenderer} 
+              onDataChange={() => {}} 
+              renderConfig={
+                {
+                  fontSize: 12,
+                  arrowStyle: currentLayout.arrowStyle, 
+                  arrowCurveFactor: currentLayout.arrowCurveFactor, 
+                  arrowCurveExclFactor: currentLayout.arrowCurveExclFactor, 
+                  arrowGapFactor: currentLayout.arrowGapFactor,
+                  showToolbar: false, 
+                  svgArrowPathProps: {
+                    stroke: currentLayout.stroke,
+                    strokeWidth: currentLayout.strokeWidth, 
+                    strokeLinecap: currentLayout.strokeLinecap, 
+                    strokeLinejoin: currentLayout.strokeLinejoin, 
+                    strokeDasharray: currentLayout.strokeDasharray
+                  }, 
+                  svgCircleProps: {
+                    stroke: currentLayout.circleStroke,
+                    fill: currentLayout.circleFill,
+                    fillOpacity: 1,
+                    visibility: currentLayout.circleVisibility
+                  },
+                  minViewBox: {
+                    w: 300,
+                    h: 300
+                  }
                 }
-              }
-            } />
+              } />
+          </div>
         </div>
       </main>
 
