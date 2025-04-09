@@ -1,8 +1,9 @@
-# mindmapgen
-Simple homebrew 2 tier mindmap generator.
+# Mindmapgen
+This is what you get when someone with limited Web Development experience and no math background tries to create a Mindmap visualizer. Two tiers supported (one tier for RadialLayout). 
 
-# Javascript
-Not fully functional. Example of Mindmap display: https://marktielemans.github.io/mindmapgen/.
+Play around with the showcase: https://marktielemans.github.io/mindmapgen/.
+
+![screenshot.png](screenshot.png)
 
 # React
 The mindmap component can display data reactively and allows for interaction with the input data as well.
@@ -33,3 +34,6 @@ return (
     <Mindmap data={data} onDataChange={onDataChange} Renderer={Renderer} />
 );
 ```
+
+# Javascript
+Early development version with limited functionality.
